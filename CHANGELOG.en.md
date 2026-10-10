@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.7
+
+- **MIT license:** `LICENSE` file, `license` field in `plugin.json`, and a README section.
+
 ## 0.2.6
 
 - **Animated demo in the README:** a GIF of the full flow (warning 1, confirmation, warning 2, execution and log), in `docs/demo-pt.gif` and `docs/demo-en.gif`.

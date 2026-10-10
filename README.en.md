@@ -65,3 +65,7 @@ If the project is in Git, add `.claude/logs/` to `.gitignore`, because the log c
 - It is a heuristic. A script that builds its SQL only at run time can pass without a warning. The real protection is still the person's confirmation in the chat.
 - SQL Server only. PostgreSQL and Oracle are pending (see `CHANGELOG.en.md`).
 - The `reading 'length'` error from the `mcp-node-mssql` package is handled by the mod after an approved command. The definitive fix is in the package (see `CHANGELOG.en.md`).
+
+## License
+
+MIT. See [LICENSE](LICENSE).

@@ -65,3 +65,7 @@ Se o projeto estiver no Git, adicione `.claude/logs/` ao `.gitignore`, porque o 
 - É uma heurística. Um script que monta o SQL só em tempo de execução pode passar sem aviso. A proteção real continua sendo a confirmação da pessoa, no chat.
 - Só SQL Server. PostgreSQL e Oracle estão pendentes (ver `CHANGELOG.md`).
 - O erro `reading 'length'` do pacote `mcp-node-mssql` é tratado pelo mod depois de comando aprovado. A correção definitiva é no pacote (ver `CHANGELOG.md`).
+
+## Licença
+
+MIT. Veja [LICENSE](LICENSE).
