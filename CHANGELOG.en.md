@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.10
+
+- **Improvement:** a dedicated message for `SHUTDOWN`, `KILL`, `DBCC` and `RECONFIGURE`. Before, they fell into the generic denial ("write database.schema.object in full"), which made no sense for server commands. Now the mod explains that these commands affect the whole server and should be run directly on SQL Server, and the log records `denied: server command`.
+
 ## 0.2.9
 
 - **Fix:** `sp_helptext`, `sp_describe_first_result_set` and other `sp_help*` and `sp_describe*` variants with arguments pass without a warning again, as the README says. The 0.2.4 fix had left only `sp_help <object>`. The arguments must now be a parameter list (object name, string or `@param = value`); anything else counts as a write. So `exec sp_help x DELETE FROM y` and `exec sp_help x SELECT * INTO t FROM y` are still blocked.

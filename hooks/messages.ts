@@ -34,6 +34,7 @@ export type Messages = {
   executedNote: string
   panelDeny: string
   unqualified: string
+  serverDenied: string
   waitAviso2: string
   failed: string
   cancelled: string
@@ -49,6 +50,7 @@ export type Messages = {
     executed: string
     cancelled: string
     unqualified: string
+    serverDenied: string
   }
 }
 
@@ -91,6 +93,7 @@ const pt: Messages = {
   executedNote: 'Executado. O MCP devolveu um erro conhecido depois da execução ("reading length"); o comando rodou. Confira com SELECT se precisar.',
   panelDeny: 'SQL guard: o mod detectou um comando de escrita ou de estrutura que precisa de confirmação. Não execute. Diga ao usuário, no chat, qual é o comando e pergunte: responda "confirma" para prosseguir ou "nega" para cancelar. A confirmação é feita só pelo chat, nunca pelo painel.',
   unqualified: 'SQL guard: escreva o nome completo banco.schema.objeto em todo comando de escrita. USE e nomes sem banco não são executados.',
+  serverDenied: 'SQL guard: SHUTDOWN, KILL, DBCC e RECONFIGURE afetam o servidor inteiro e não são executados por aqui. Se for mesmo necessário, a pessoa deve rodar direto no SQL Server.',
   waitAviso2: 'SQL guard: ainda falta a confirmação final do usuário. Não execute. Pergunte no chat: "confirma" para prosseguir ou "nega" para cancelar.',
   failed: 'SQL guard: falhou ao verificar o comando; nada foi executado.',
   cancelled: 'SQL guard: pendência cancelada, o comando não foi executado.',
@@ -106,6 +109,7 @@ const pt: Messages = {
     executed: 'executado',
     cancelled: 'cancelado',
     unqualified: 'negado: sem banco explícito',
+    serverDenied: 'negado: comando de servidor',
   },
 }
 
@@ -148,6 +152,7 @@ const en: Messages = {
   executedNote: 'Executed. The MCP returned a known error after running the command ("reading length"); the command did run. Check with SELECT if needed.',
   panelDeny: 'SQL guard: the mod detected a write or structure command that needs confirmation. Do not run it. Tell the user in the chat which command it is and ask: reply "confirm" to proceed or "deny" to cancel. Confirmation happens only in the chat, never in the panel.',
   unqualified: 'SQL guard: write `database.schema.object` in full in every write command. USE and names without the database are not run.',
+  serverDenied: 'SQL guard: SHUTDOWN, KILL, DBCC and RECONFIGURE affect the whole server and are not run from here. If it is really needed, the person should run it directly on SQL Server.',
   waitAviso2: 'SQL guard: the final confirmation from the user is still missing. Do not run it. Ask in the chat: "confirm" to proceed or "deny" to cancel.',
   failed: 'SQL guard: the check failed; nothing was run.',
   cancelled: 'SQL guard: pending command cancelled; it was not run.',
@@ -163,6 +168,7 @@ const en: Messages = {
     executed: 'executed',
     cancelled: 'cancelled',
     unqualified: 'denied: no explicit database',
+    serverDenied: 'denied: server command',
   },
 }
 

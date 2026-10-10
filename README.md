@@ -58,7 +58,7 @@ O painel só mostra os detalhes. Não recebe clique nem confirmação.
 
 ## Log
 
-O log é **por projeto**: `.claude/logs/sql-guard.log`, na pasta onde o Claude foi aberto. Cada linha tem: data e hora (UTC), MCP ou `shell`, ação, banco, tabela e resultado (`WARNING 1 shown`, `confirmed WARNING 1`, `confirmed WARNING 2`, `executed`, `cancelled`, `denied: no explicit database`). O log não grava dados das linhas nem o SQL completo.
+O log é **por projeto**: `.claude/logs/sql-guard.log`, na pasta onde o Claude foi aberto. Cada linha tem: data e hora (UTC), MCP ou `shell`, ação, banco, tabela e resultado (`WARNING 1 shown`, `confirmed WARNING 1`, `confirmed WARNING 2`, `executed`, `cancelled`, `denied: no explicit database`, `denied: server command`). O log não grava dados das linhas nem o SQL completo.
 
 Se o projeto estiver no Git, adicione `.claude/logs/` ao `.gitignore`, porque o log tem nomes de bancos e tabelas.
 

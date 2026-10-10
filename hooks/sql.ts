@@ -7,7 +7,7 @@ export type Op = {
   action: string
   db: string | null
   table: string | null
-  kind: 'table' | 'procedure' | 'database' | 'other'
+  kind: 'table' | 'procedure' | 'database' | 'server' | 'other'
   reversible: Reversible
   text: string
 }
@@ -21,6 +21,8 @@ const SP_ARG = String.raw`(?:@\w+\s*=\s*)?(?:N?'(?:[^']|'')*'|[\w.\[\]]+)`
 const SP_HELP = new RegExp(String.raw`^(?:exec(?:ute)?\s+)?sp_(?:help|describe)\w*(?:\s+${SP_ARG}(?:\s*,\s*${SP_ARG})*)?\s*$`, 'i')
 const isSpHelp = (text: string): boolean => SP_HELP.test(text)
 const DML = ['INSERT', 'UPDATE', 'DELETE', 'MERGE', 'SELECT INTO']
+// Comandos que afetam o servidor inteiro, sem banco a mostrar: o mod nega com mensagem própria.
+const SERVER = ['SHUTDOWN', 'KILL', 'DBCC', 'RECONFIGURE']
 const IN_TRANSACTION: Reversible = 'in-transaction'
 const NO: Reversible = 'no'
 const UNKNOWN: Reversible = 'unknown'
@@ -95,7 +97,15 @@ export function classify(query: string): Op[] {
       table = parts[parts.length - 1]
     }
 
-    const kind: Op['kind'] = isDatabase ? 'database' : isProcedure ? 'procedure' : table ? 'table' : 'other'
+    const kind: Op['kind'] = SERVER.includes(action)
+      ? 'server'
+      : isDatabase
+        ? 'database'
+        : isProcedure
+          ? 'procedure'
+          : table
+            ? 'table'
+            : 'other'
     const reversible = DML.includes(action)
       ? IN_TRANSACTION
       : ['EXEC', 'EXECUTE', 'SP_EXECUTESQL'].includes(action) || action.startsWith('XP_')

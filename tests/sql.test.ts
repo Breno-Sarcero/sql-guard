@@ -82,6 +82,8 @@ test('sp_help seguido de escrita na mesma linha não passa', () => {
 test('comandos de servidor que alteram estado contam como escrita', () => {
   for (const q of ['shutdown', 'kill 52', "restore database CRM_BD from disk = 'x.bak'", "backup database CRM_BD to disk = 'x.bak'", 'dbcc checkdb', 'reconfigure'])
     expect(classify(q).length).toBe(1)
+  for (const q of ['shutdown', 'kill 52', 'dbcc checkdb', 'reconfigure'])
+    expect(classify(q)[0].kind).toBe('server')
   const [restore] = classify("restore database CRM_BD from disk = 'x.bak'")
   expect(restore.db).toBe('CRM_BD')
   expect(restore.kind).toBe('database')

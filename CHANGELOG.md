@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.10
+
+- **Melhoria:** mensagem própria para `SHUTDOWN`, `KILL`, `DBCC` e `RECONFIGURE`. Antes caíam na negação genérica ("escreva o nome completo banco.schema.objeto"), que não fazia sentido para comandos de servidor. Agora o mod explica que esses comandos afetam o servidor inteiro e devem ser rodados direto no SQL Server, e o log registra `negado: comando de servidor`.
+
 ## 0.2.9
 
 - **Correção:** `sp_helptext`, `sp_describe_first_result_set` e outras variações de `sp_help*` e `sp_describe*` com argumentos voltaram a passar sem aviso, como diz o README. A correção da 0.2.4 tinha deixado só `sp_help <objeto>`. Os argumentos agora precisam ser uma lista de parâmetros (nome de objeto, string ou `@param = valor`); qualquer outra coisa conta como escrita. Assim, `exec sp_help x DELETE FROM y` e `exec sp_help x SELECT * INTO t FROM y` continuam bloqueados.

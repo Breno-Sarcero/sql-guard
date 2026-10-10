@@ -157,6 +157,16 @@ export const register: Register = (on, options) => {
       const writes = classify(e.query)
       if (writes.length === 0) return next(e)
 
+      // Comandos de servidor (SHUTDOWN, KILL, DBCC, RECONFIGURE) não têm banco a mostrar: negados com mensagem própria.
+      if (writes.some(op => op.kind === 'server')) {
+        const old = await $.fs.read(logFile).catch(() => '')
+        await $.fs.write(logFile, String(old) + logLines(e.tool.split('__')[1], writes, t.log.serverDenied)).catch(() => $.ui.toast(t.logFailed))
+        pending = null
+        await update($, panel, () => null)
+        await $.ui.close({ id: PANE })
+        return { deny: t.serverDenied }
+      }
+
       if (writes.some(op => op.db === null)) {
         const old = await $.fs.read(logFile).catch(() => '')
         await $.fs.write(logFile, String(old) + logLines(e.tool.split('__')[1], writes, t.log.unqualified)).catch(() => $.ui.toast(t.logFailed))
