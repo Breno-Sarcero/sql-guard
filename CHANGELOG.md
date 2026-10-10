@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.8
+
+- README: exemplo de caminho no macOS e no Linux para a instalação pelo zip.
+
 ## 0.2.7
 
 - **Licença MIT:** arquivo `LICENSE`, campo `license` no `plugin.json` e seção no README.

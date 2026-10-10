@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.8
+
+- README: macOS and Linux path example for the zip install.
+
 ## 0.2.7
 
 - **MIT license:** `LICENSE` file, `license` field in `plugin.json`, and a README section.

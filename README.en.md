@@ -43,6 +43,8 @@ Download the zip from [Releases](https://github.com/Breno-Sarcero/sql-guard/rele
 }
 ```
 
+On macOS or Linux, use your system's path format, for example `/Users/your-user/plugins/sql-guard` (macOS) or `/home/your-user/plugins/sql-guard` (Linux).
+
 ## How to confirm a write
 
 1. Claude tries the command. The mod blocks it, and the "SQL guard" side panel shows warning 1: operation, database, table, whether it is reversible, and the command.

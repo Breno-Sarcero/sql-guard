@@ -43,6 +43,8 @@ Baixe o zip em [Releases](https://github.com/Breno-Sarcero/sql-guard/releases), 
 }
 ```
 
+No macOS ou no Linux, use o caminho no formato do sistema, por exemplo `/Users/seu-usuario/plugins/sql-guard` (macOS) ou `/home/seu-usuario/plugins/sql-guard` (Linux).
+
 ## Como confirmar uma escrita
 
 1. O Claude tenta o comando. O mod bloqueia, e o painel lateral "SQL guard" mostra o aviso 1: operação, banco, tabela, se é reversível e o comando.
