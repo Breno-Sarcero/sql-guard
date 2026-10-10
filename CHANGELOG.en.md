@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.6
+
+- **Animated demo in the README:** a GIF of the full flow (warning 1, confirmation, warning 2, execution and log), in `docs/demo-pt.gif` and `docs/demo-en.gif`.
+
 ## 0.2.5
 
 - **One-command install:** the repository is now a marketplace (`.claude-plugin/marketplace.json`). Install with `/plugin install sql-guard --marketplace Breno-Sarcero/sql-guard`.

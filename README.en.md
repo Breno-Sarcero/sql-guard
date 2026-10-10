@@ -4,6 +4,8 @@
 
 Protects against accidental writes and DDL made by Claude Code: commands on SQL Server MCPs and shell commands that reach a database. It does not catch every case, but it removes many risks of running the wrong thing when the AI understands something other than what the person meant.
 
+![sql-guard: Claude tries a DELETE, the mod blocks it with warning 1, the user confirms, warning 2 follows, the user confirms again, the command runs and the log records all four steps](docs/demo-en.gif)
+
 ## What it checks
 
 - **SQL Server MCP** (`query` on the configured servers): writes and DDL are blocked until confirmed. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`. Commands without a full `database.schema.object` name are denied, and so is `USE`.

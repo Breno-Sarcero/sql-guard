@@ -4,6 +4,8 @@
 
 Protege contra escrita e DDL acidentais feitas pelo Claude Code: comandos nos MCPs de SQL Server e comandos de shell que acessam banco. Não resolve todos os casos, mas elimina muitos riscos de execução errada, quando a IA entende algo diferente do que a pessoa pediu.
 
+![sql-guard: o Claude tenta um DELETE, o mod bloqueia com o aviso 1, o usuário confirma, vem o aviso 2, confirma de novo, o comando executa e o log registra as quatro etapas](docs/demo-pt.gif)
+
 ## O que é verificado
 
 - **MCP de SQL Server** (`query` nos servidores configurados): escrita e DDL são bloqueadas até confirmação. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`. Comandos sem `banco.schema.objeto` completo são negados, e `USE` também.
