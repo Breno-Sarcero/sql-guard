@@ -1,0 +1,42 @@
+{
+  "name": "sql-guard",
+  "version": "0.2.3",
+  "author": {
+    "name": "Breno Santiago Sarcero"
+  },
+  "types": "./types/index.d.ts",
+  "description": "Bloqueia escrita e DDL nos MCPs de SQL Server e comandos de shell que acessam banco; libera só após dois 'sim' do usuário. Não resolve todos os casos, mas elimina muitos riscos de execução errada por IA.",
+  "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Idioma dos avisos / Warning language",
+      "description": "pt ou en. Obrigatório: sem escolha, o mod bloqueia as escritas. / pt or en. Required: without it, the mod blocks writes.",
+      "options": ["pt", "en"],
+      "required": true
+    },
+    "sqlServers": {
+      "type": "string",
+      "title": "Nomes dos MCPs de SQL Server / SQL Server MCP names",
+      "description": "Um ou mais, separados por vírgula. Veja com `claude mcp list`. / One or more, comma-separated. See them with `claude mcp list`.",
+      "default": ""
+    },
+    "queryTool": {
+      "type": "string",
+      "title": "Nome da ferramenta de consulta / Query tool name",
+      "description": "Nome da ferramenta que executa SQL no MCP. / Name of the tool that runs SQL on the MCP.",
+      "default": "query"
+    },
+    "timeoutMinutes": {
+      "type": "number",
+      "title": "Prazo para confirmar (minutos) / Time to confirm (minutes)",
+      "description": "Tempo entre o aviso e a sua resposta. Padrão: 5. / Time between the warning and your answer. Default: 5.",
+      "default": 5
+    },
+    "logDir": {
+      "type": "string",
+      "title": "Pasta do log / Log folder",
+      "description": "Vazio grava em .claude/logs. Ou informe outra pasta. / Empty writes to .claude/logs. Or give another folder.",
+      "default": ""
+    }
+  }
+}

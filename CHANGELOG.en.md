@@ -1,0 +1,45 @@
+[Português](CHANGELOG.md) | **English**
+
+# Changelog
+
+## 0.2.3
+
+- **Shell false positive fixed:** the name `mssql` inside another package (e.g. `mcp-node-mssql`, in any command with that path) triggered the database warning. Now the driver must appear as a whole word.
+- New test for this case.
+
+## 0.2.2
+
+- Removed the local marketplace. The mod loads from its folder; the configuration goes in `pluginConfigs` as `sql-guard@inline`.
+- The `.claude/logs` folder is kept out of the repository, via a `.gitignore` at the root of `DEV_MODS`.
+
+## 0.2.1
+
+- Author in `plugin.json`, so the validation warning goes away.
+
+## 0.2.0
+
+- **Shell (Bash and PowerShell):** commands that reach a database go through the same two-step confirmation.
+  - Direct SQL clients (`sqlcmd`, `osql`, `bcp`, `Invoke-Sqlcmd`) and database drivers in the command itself (`pyodbc`, `pymssql`, `mssql`).
+  - Scripts run by the command (`python`, `node`, `tsx`, `powershell -File`) are read, along with the local modules they import. If any of them uses a database driver, the warning shows the path and the write SQL lines it found.
+  - Django commands that change the database (`migrate`, `flush`, `loaddata`, `dbshell`).
+  - Asks for confirmation in both warnings before running. It shows what it found, and the decision is the user's.
+- **Side panel:** warnings appear in a panel (`$.ui.open`), with the title in yellow, the command in bold blue, "confirma/confirm" in green and "nega/deny" in red. The panel opens by itself at 144 columns or more, and with the `/sql-guard` command from 110 columns.
+- **Confirmation in the chat only:** the user answers in the chat. In Portuguese: `confirma` to run, `nega` to cancel. In English: `confirm` and `deny`. The panel does not take clicks or confirmations.
+- **Messages to the model:** the model gets a short instruction to ask in the chat, and it no longer refers to the panel as a place to confirm.
+- **`reading 'length'` error:** it comes from the `mcp-node-mssql` package (0.1.1) when a command returns no rows. The mod replaces this specific error with an "executed" note, only after a command approved by both warnings. See "Pending".
+- **Language:** required at install (pt or en), with no default.
+- **Time to confirm:** configurable at install, default 5 minutes.
+- **Log:** one line per operation, with UTC date, MCP or `shell`, action, database, table and result. It does not record row data or the full SQL.
+
+## 0.1.0
+
+- Blocks writes and DDL on SQL Server MCPs, with two warnings and confirmation by the user.
+- Install settings: language, SQL Server MCP names, query tool name and log folder.
+
+## Pending
+
+- **Confirmation words:** today only `sim`, `confirma`, `pode`, and a few others from the list count as approval. Any other word (e.g. `positivo`) cancels the pending action, and the user has to start over. Improvement: accept any approval word and any refusal word to cancel.
+
+- **`reading 'length'` at the source:** the definitive fix belongs in the `mcp-node-mssql` package, an npm package. We applied a local fix to the global install (with a backup), which is lost on `npm update -g`. Once the package is fixed, the mod's "executed" note can be removed.
+- **Other databases** (PostgreSQL, Oracle and others). Each one needs its own profile: full-name rule, write commands and how to identify the database.
+- **Clicking in the panel:** left out for now. A click does not send a chat message, so it would need a way to send "confirma" or "nega" automatically.

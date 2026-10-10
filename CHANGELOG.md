@@ -1,0 +1,45 @@
+**Português** | [English](CHANGELOG.en.md)
+
+# Changelog
+
+## 0.2.3
+
+- **Falso positivo no shell corrigido:** o nome `mssql` dentro de outro pacote (ex.: `mcp-node-mssql`, em qualquer comando com esse caminho) disparava o aviso de banco. Agora o driver precisa aparecer como palavra inteira.
+- Teste novo para esse caso.
+
+## 0.2.2
+
+- Removido o marketplace local. O mod é carregado pela pasta; a configuração vai em `pluginConfigs` como `sql-guard@inline`.
+- Pasta `.claude/logs` fora do repositório, via `.gitignore` na raiz de `DEV_MODS`.
+
+## 0.2.1
+
+- Autor no `plugin.json`, para o aviso de validação sumir.
+
+## 0.2.0
+
+- **Shell (Bash e PowerShell):** comandos que acessam banco passam pela mesma confirmação em dois passos.
+  - Clientes SQL diretos (`sqlcmd`, `osql`, `bcp`, `Invoke-Sqlcmd`) e drivers no próprio comando (`pyodbc`, `pymssql`, `mssql`).
+  - Scripts chamados pelo comando (`python`, `node`, `tsx`, `powershell -File`) são lidos, e também os módulos locais que eles importam. Se algum usar driver de banco, o aviso mostra o caminho e as linhas de SQL de escrita encontradas.
+  - Comandos do Django que alteram o banco (`migrate`, `flush`, `loaddata`, `dbshell`).
+  - Pede confirmação nos dois avisos antes de executar. Mostra o que encontrou, e a decisão é do usuário.
+- **Painel lateral:** os avisos aparecem num painel (`$.ui.open`), com título em amarelo, comando em azul e negrito, "confirma/confirm" em verde e "nega/deny" em vermelho. O painel abre sozinho com 144 colunas ou mais, e pelo comando `/sql-guard` a partir de 110.
+- **Confirmação só pelo chat:** o usuário responde no chat. Pelo texto em português: `confirma` para executar, `nega` para cancelar. Em inglês: `confirm` e `deny`. O painel não recebe clique nem confirmação.
+- **Mensagens ao modelo:** o modelo recebe uma instrução curta, que diz para perguntar no chat, sem citar o painel como lugar de confirmação.
+- **Erro `reading 'length'`:** vem do pacote `mcp-node-mssql` (0.1.1) quando um comando não devolve linhas. O mod troca esse erro específico por uma nota de "executado", só depois de comando aprovado pelos dois avisos. Ver "Pendente".
+- **Idioma:** configuração obrigatória na instalação (pt ou en), sem padrão.
+- **Prazo para confirmar:** configurável na instalação, com padrão de 5 minutos.
+- **Log:** uma linha por operação, com data UTC, MCP, ação, banco, tabela e resultado. Não grava dados das linhas nem o SQL completo.
+
+## 0.1.0
+
+- Bloqueio de escrita e DDL nos MCPs de SQL Server, com dois avisos e confirmação pelo usuário.
+- Configuração na instalação: idioma, nomes dos MCPs de SQL Server, nome da ferramenta de consulta e pasta do log.
+
+## Pendente
+
+- **Palavras de confirmação:** hoje só `sim`, `confirma`, `pode`, entre outras da lista, valem como aprovação. Qualquer outra palavra (ex.: `positivo`) cancela a pendência, e o usuário precisa começar de novo. Melhoria: aceitar qualquer palavra de aprovação e qualquer palavra de recusa para cancelar.
+
+- **Erro `reading 'length'` na origem:** a correção definitiva é no pacote `mcp-node-mssql`, que é um pacote npm. Aplicamos um ajuste local na instalação global (com backup), que se perde com `npm update -g`. Quando o pacote for tratado, a nota de "executado" do mod pode ser removida.
+- **Outros bancos de dados** (PostgreSQL, Oracle e outros). Cada banco precisa de um perfil próprio: regra de nome completo, comandos de escrita e como identificar o banco.
+- **Clique no painel:** deixado de fora por enquanto. Um clique não envia mensagem para o chat, então precisaria de uma forma de enviar "confirma" ou "nega" automaticamente.
