@@ -15,6 +15,8 @@ export type Op = {
 const WRITE = /\b(insert|update|delete|merge|drop|alter|truncate|create|grant|revoke|deny|exec|execute|bulk|openrowset|openquery|use|sp_executesql|xp_\w+)\b/i
 const SELECT_INTO = /\bselect\b[\s\S]*?\binto\s+([\w\[\]\.]+)/i
 const TARGET = /\b(insert\s+into|update|delete\s+from|merge\s+into|truncate\s+table|(?:alter|create|drop)\s+(?:table|view|procedure|proc|function|trigger|index)|(?:alter|create|drop)\s+database|exec(?:ute)?)\s+(?:if\s+(?:not\s+)?exists\s+)?([\w\[\]\.]+)/i
+// sp_help e sp_describe só valem para um nome de objeto, sem mais nada na statement.
+const SP_HELP = /^(exec(ute)?\s+)?sp_(help|describe)\s+[\w.\[\]]+$/i
 const DML = ['INSERT', 'UPDATE', 'DELETE', 'MERGE', 'SELECT INTO']
 const IN_TRANSACTION: Reversible = 'in-transaction'
 const NO: Reversible = 'no'
@@ -25,17 +27,48 @@ export function normalize(query: string): string {
 }
 
 // Só comandos de escrita viram ops. Lista vazia = leitura, libera sem aviso.
+function countWrites(text: string): number {
+  return (text.match(new RegExp(WRITE.source, 'gi')) ?? []).length
+}
+
+// Tira comentários só fora de literais: '--' dentro de uma string não pode esconder o resto da linha.
+function stripComments(query: string): string {
+  let out = ''
+  let i = 0
+  while (i < query.length) {
+    const c = query[i]
+    // Literal ('...'), identificador entre aspas ("...") ou entre colchetes ([...]). Escape: a aspa ou ] dobrada.
+    if (c === "'" || c === '"' || c === '[') {
+      const close = c === '[' ? ']' : c
+      let j = i + 1
+      while (j < query.length && !(query[j] === close && query[j + 1] !== close)) j += query[j] === close ? 2 : 1
+      out += query.slice(i, j + 1)
+      i = j + 1
+    } else if (c === '-' && query[i + 1] === '-') {
+      const nl = query.indexOf('\n', i)
+      i = nl < 0 ? query.length : nl
+      out += ' '
+    } else if (c === '/' && query[i + 1] === '*') {
+      const end = query.indexOf('*/', i + 2)
+      i = end < 0 ? query.length : end + 2
+      out += ' '
+    } else {
+      out += c
+      i++
+    }
+  }
+  return out
+}
+
 export function classify(query: string): Op[] {
-  const clean = query
-    .replace(/\/\*[\s\S]*?\*\//g, ' ')
-    .replace(/--[^\n]*/g, ' ')
+  const clean = stripComments(query)
   const ops: Op[] = []
 
   for (const stmt of clean.split(/;|^\s*go\s*$/im)) {
     const text = stmt.trim()
     if (!text) continue
     // sp_help e sp_describe são leitura, liberadas pelo CLAUDE.md
-    if (/^(exec(ute)?\s+)?sp_(help|describe)/i.test(text)) continue
+    if (SP_HELP.test(text)) continue
 
     const word = WRITE.exec(text)
     const into = SELECT_INTO.exec(text)
@@ -67,6 +100,13 @@ export function classify(query: string): Op[] {
         : NO
 
     ops.push({ action, db, table, kind, reversible, text })
+  }
+
+  // Camada fail-closed: se a limpeza escondeu alguma palavra de escrita do texto original, a statement vira escrita.
+  const hidden = countWrites(query) > countWrites(clean)
+  if (hidden && !SP_HELP.test(query.trim())) {
+    const word = WRITE.exec(query)
+    if (word) ops.push({ action: word[1].toUpperCase(), db: null, table: null, kind: 'other', reversible: 'unknown', text: query })
   }
 
   return ops

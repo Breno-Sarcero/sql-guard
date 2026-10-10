@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.2.4
+
+- **Security fix in the SQL classifier (commit review):**
+  - `--` and `/* */` comments are only removed outside literals (`'...'`, `"..."` and `[...]`, with doubled quote and bracket escapes). Before, a `--` inside a string hid the rest of the line, including a `DELETE`.
+  - The `sp_help` / `sp_describe` shortcut only applies to a bare object name. Before, a write on the next line got through.
+  - Fail-closed layer: if comment removal hides any write keyword from the original text (comparing counts), the statement is treated as a write. Effect: a write that only appears inside a comment also asks for a warning.
+- Five new tests covering the cases above.
+
 ## 0.2.3
 
 - **Shell false positive fixed:** the name `mssql` inside another package (e.g. `mcp-node-mssql`, in any command with that path) triggered the database warning. Now the driver must appear as a whole word.

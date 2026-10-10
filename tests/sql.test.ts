@@ -50,6 +50,35 @@ test('select into conta como escrita', () => {
   expect(op.table).toBe('copia')
 })
 
+test('-- dentro de literal não esconde escrita na mesma linha', () => {
+  const ops = classify("select '--' ; delete from CRM_BD.dbo.clientes")
+  expect(ops.length).toBe(1)
+  expect(ops[0].action).toBe('DELETE')
+})
+
+test('-- dentro de identificador entre aspas duplas não esconde escrita', () => {
+  const ops = classify('select "--" ; delete from CRM_BD.dbo.clientes')
+  expect(ops.length).toBe(1)
+  expect(ops[0].action).toBe('DELETE')
+})
+
+test('colchete com ]] escapado não esconde escrita', () => {
+  const ops = classify('select [x]]--] ; delete from CRM_BD.dbo.clientes')
+  expect(ops.length).toBe(1)
+  expect(ops[0].action).toBe('DELETE')
+})
+
+test('sp_help não serve de atalho para escrita na linha seguinte', () => {
+  const ops = classify('exec sp_help CRM_BD.dbo.clientes\nDELETE FROM CRM_BD.dbo.logs')
+  expect(ops.length).toBe(1)
+})
+
+test('escrita só dentro de comentário é tratada como escrita (fail-closed)', () => {
+  const ops = classify('select 1 /* delete from CRM_BD.dbo.x */')
+  expect(ops.length).toBe(1)
+  expect(ops[0].action).toBe('DELETE')
+})
+
 test('normalize ignora caixa e espaços', () => {
   expect(normalize('  UPDATE   x.dbo.t  SET a=1 ')).toBe('update x.dbo.t set a=1')
 })

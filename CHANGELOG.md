@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.2.4
+
+- **Correção de segurança no classificador SQL (revisão do commit):**
+  - Comentários `--` e `/* */` só são removidos fora de literais (`'...'`, `"..."` e `[...]`, com escape de aspa e colchete dobrados). Antes, um `--` dentro de uma string escondia o resto da linha, incluindo um `DELETE`.
+  - O atalho de `sp_help` / `sp_describe` só vale para um nome de objeto sozinho. Antes, uma escrita na linha seguinte passava.
+  - Camada fail-closed: se a limpeza esconder alguma palavra de escrita do texto original (comparando contagens), a statement é tratada como escrita. Efeito: uma escrita que só aparece dentro de comentário também pede aviso.
+- Cinco testes novos cobrindo os casos acima.
+
 ## 0.2.3
 
 - **Falso positivo no shell corrigido:** o nome `mssql` dentro de outro pacote (ex.: `mcp-node-mssql`, em qualquer comando com esse caminho) disparava o aviso de banco. Agora o driver precisa aparecer como palavra inteira.
