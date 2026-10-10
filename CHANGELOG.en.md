@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.11
+
+- README with badges: license, release version, Claude Code plugin and languages.
+
 ## 0.2.10
 
 - **Improvement:** a dedicated message for `SHUTDOWN`, `KILL`, `DBCC` and `RECONFIGURE`. Before, they fell into the generic denial ("write database.schema.object in full"), which made no sense for server commands. Now the mod explains that these commands affect the whole server and should be run directly on SQL Server, and the log records `denied: server command`.

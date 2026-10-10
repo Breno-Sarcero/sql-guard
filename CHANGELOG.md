@@ -2,6 +2,10 @@
 
 # Changelog
 
+## 0.2.11
+
+- README com badges: licença, versão da release, plugin do Claude Code e idiomas.
+
 ## 0.2.10
 
 - **Melhoria:** mensagem própria para `SHUTDOWN`, `KILL`, `DBCC` e `RECONFIGURE`. Antes caíam na negação genérica ("escreva o nome completo banco.schema.objeto"), que não fazia sentido para comandos de servidor. Agora o mod explica que esses comandos afetam o servidor inteiro e devem ser rodados direto no SQL Server, e o log registra `negado: comando de servidor`.

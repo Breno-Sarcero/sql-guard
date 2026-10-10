@@ -2,6 +2,8 @@
 
 # sql-guard
 
+[![license: MIT](https://img.shields.io/badge/license-MIT-yellow)](LICENSE) [![release](https://img.shields.io/github/v/release/Breno-Sarcero/sql-guard)](https://github.com/Breno-Sarcero/sql-guard/releases) ![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-d97757) ![languages: pt | en](https://img.shields.io/badge/languages-pt%20%7C%20en-5fd38d)
+
 Protects against accidental writes and DDL made by Claude Code: commands on SQL Server MCPs and shell commands that reach a database. It does not catch every case, but it removes many risks of running the wrong thing when the AI understands something other than what the person meant.
 
 ![sql-guard: Claude tries a DELETE, the mod blocks it with warning 1, the user confirms, warning 2 follows, the user confirms again, the command runs and the log records all four steps](docs/demo-en.gif)
