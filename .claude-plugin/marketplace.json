@@ -1,0 +1,6 @@
+{
+  "name": "sql-guard",
+  "description": "Claude Code plugin that requires two explicit user confirmations before any SQL write or DDL runs, through SQL Server MCP tools or database shell commands.",
+  "owner": { "name": "Breno Santiago Sarcero" },
+  "plugins": [{ "name": "sql-guard", "source": "./" }]
+}

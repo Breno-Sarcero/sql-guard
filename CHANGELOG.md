@@ -2,6 +2,12 @@
 
 # Changelog
 
+## 0.2.5
+
+- **Instalação em um comando:** o repositório agora é um marketplace (`.claude-plugin/marketplace.json`). Instale com `/plugin install sql-guard --marketplace Breno-Sarcero/sql-guard`.
+- README com a instalação nova, a alternativa pelo zip da release e a lista correta de palavras de confirmação.
+- Exemplos de configuração com nomes genéricos.
+
 ## 0.2.4
 
 - **Correção de segurança no classificador SQL (revisão do commit):**
@@ -18,7 +24,7 @@
 ## 0.2.2
 
 - Removido o marketplace local. O mod é carregado pela pasta; a configuração vai em `pluginConfigs` como `sql-guard@inline`.
-- Pasta `.claude/logs` fora do repositório, via `.gitignore` na raiz de `DEV_MODS`.
+- Pasta `.claude/logs` fora do repositório, via `.gitignore`.
 
 ## 0.2.1
 

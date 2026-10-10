@@ -12,7 +12,13 @@ Protects against accidental writes and DDL made by Claude Code: commands on SQL 
 
 ## Installation
 
-At install, Claude Code asks for:
+In a Claude Code terminal session, type:
+
+```
+/plugin install sql-guard --marketplace Breno-Sarcero/sql-guard
+```
+
+Answer `y` to add the marketplace and pick a scope (user scope applies to every session). Claude Code then asks for:
 
 1. **Language** (`pt` or `en`): required, with no default. Without a choice, the mod blocks all writes.
 2. **SQL Server MCP names**: one or more, separated by commas. For example `sqlserver,sqlserver-dev`. Check them with `claude mcp list`.
@@ -20,7 +26,20 @@ At install, Claude Code asks for:
 4. **Log folder**: empty writes to `.claude/logs`, in the folder where Claude was opened.
 5. **Time to confirm (minutes)**: default 5. This is the time between the warning and your answer. If it passes, the request expires and Claude has to ask again. Increase it if you usually answer slowly.
 
-If Claude is helping with the install, ask it to ask these five questions, in the order above.
+### Alternative: from the release zip
+
+Download the zip from [Releases](https://github.com/Breno-Sarcero/sql-guard/releases), extract it, and point the `CLAUDE_CODE_PLUGIN_DIRS` variable in your `settings.json` to the extracted folder. The five options above go in `pluginConfigs`, under the `sql-guard@inline` key:
+
+```json
+{
+  "env": { "CLAUDE_CODE_PLUGIN_DIRS": "C:\\path\\to\\sql-guard" },
+  "pluginConfigs": {
+    "sql-guard@inline": {
+      "options": { "language": "en", "sqlServers": "sqlserver", "queryTool": "query" }
+    }
+  }
+}
+```
 
 ## How to confirm a write
 
@@ -29,7 +48,7 @@ If Claude is helping with the install, ask it to ask these five questions, in th
 3. Claude tries again, and the mod shows warning 2, with the command.
 4. You answer again, in the chat. The command runs.
 
-Any other message that does not start with the confirmation word cancels the request. If the message contains `but`, `wait`, `espera` or `mas` anywhere, it also cancels. The request expires after the configured time (5 minutes by default) without progress. This time can be changed at install.
+The reply must start with a confirmation word: `confirm`, `yes`, `go`, `run`, or in Portuguese `confirma`, `sim`, `pode`, `executa`. Any other reply cancels the request. If the message contains `but`, `wait`, `espera` or `mas` anywhere, it also cancels. The request expires after the configured time (5 minutes by default) without progress. This time can be changed at install.
 
 The panel only shows the details. It does not take clicks or confirmations.
 

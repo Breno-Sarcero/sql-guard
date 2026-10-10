@@ -12,7 +12,13 @@ Protege contra escrita e DDL acidentais feitas pelo Claude Code: comandos nos MC
 
 ## Instalação
 
-Na instalação, o Claude Code pede:
+No terminal do Claude Code, digite:
+
+```
+/plugin install sql-guard --marketplace Breno-Sarcero/sql-guard
+```
+
+Responda `y` para adicionar o marketplace e escolha o escopo (o de usuário vale para todas as sessões). Em seguida, o Claude Code pede:
 
 1. **Idioma** (`pt` ou `en`): obrigatório, sem padrão. Sem escolha, o mod bloqueia todas as escritas.
 2. **Nomes dos MCPs de SQL Server**: um ou mais, separados por vírgula. Por exemplo `sqlserver,sqlserver-dev`. Veja com `claude mcp list`.
@@ -20,7 +26,20 @@ Na instalação, o Claude Code pede:
 4. **Pasta do log**: vazio grava em `.claude/logs`, na pasta de onde o Claude foi aberto.
 5. **Prazo para confirmar (minutos)**: padrão 5. É o tempo entre o aviso e a sua resposta. Se passar desse tempo, o pedido expira e o Claude precisa pedir de novo. Aumente se você costuma responder com calma.
 
-Se a instalação for feita com ajuda do Claude, peça para ele fazer essas cinco perguntas, na ordem acima.
+### Alternativa: pelo zip da release
+
+Baixe o zip em [Releases](https://github.com/Breno-Sarcero/sql-guard/releases), extraia e aponte a variável `CLAUDE_CODE_PLUGIN_DIRS` do seu `settings.json` para a pasta extraída. As cinco opções acima ficam em `pluginConfigs`, na chave `sql-guard@inline`:
+
+```json
+{
+  "env": { "CLAUDE_CODE_PLUGIN_DIRS": "C:\\caminho\\para\\sql-guard" },
+  "pluginConfigs": {
+    "sql-guard@inline": {
+      "options": { "language": "pt", "sqlServers": "sqlserver", "queryTool": "query" }
+    }
+  }
+}
+```
 
 ## Como confirmar uma escrita
 
@@ -29,7 +48,7 @@ Se a instalação for feita com ajuda do Claude, peça para ele fazer essas cinc
 3. O Claude tenta de novo, e o mod mostra o aviso 2, com o comando.
 4. Você responde de novo, no chat. O comando roda.
 
-Qualquer outra mensagem que não comece com a palavra de confirmação cancela o pedido. Se a mensagem tiver `mas`, `espera`, `wait` ou `but` em qualquer parte, também cancela. O pedido expira depois do prazo configurado (5 minutos por padrão) sem avançar. Esse prazo pode ser alterado na instalação.
+A resposta precisa começar com uma palavra de confirmação: `confirma`, `sim`, `pode`, `executa`, ou em inglês `confirm`, `yes`, `go`, `run`. Qualquer outra resposta cancela o pedido. Se a mensagem tiver `mas`, `espera`, `wait` ou `but` em qualquer parte, também cancela. O pedido expira depois do prazo configurado (5 minutos por padrão) sem avançar. Esse prazo pode ser alterado na instalação.
 
 O painel só mostra os detalhes. Não recebe clique nem confirmação.
 
