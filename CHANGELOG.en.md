@@ -2,6 +2,11 @@
 
 # Changelog
 
+## 0.2.9
+
+- **Fix:** `sp_helptext`, `sp_describe_first_result_set` and other `sp_help*` and `sp_describe*` variants with arguments pass without a warning again, as the README says. The 0.2.4 fix had left only `sp_help <object>`. The arguments must now be a parameter list (object name, string or `@param = value`); anything else counts as a write. So `exec sp_help x DELETE FROM y` and `exec sp_help x SELECT * INTO t FROM y` are still blocked.
+- **Server commands:** `BACKUP`, `RESTORE`, `DBCC`, `SHUTDOWN`, `KILL` and `RECONFIGURE` now count as writes (before, they passed without a warning). `BACKUP DATABASE` and `RESTORE DATABASE` go through both warnings, with the database shown. The others have no database to show and are denied.
+
 ## 0.2.8
 
 - README: macOS and Linux path example for the zip install.
@@ -64,6 +69,7 @@
 
 ## Pending
 
+- **Shell false positives:** the mod reads the script from the path written in the command, relative to the folder where Claude was opened. If the command runs `cd` before a script with a relative path, or uses a variable in the path (`$DIR/x.py`), the mod cannot find the file and asks for confirmation to be safe. Workaround: use the full path, without variables.
 - **Confirmation words:** today only `sim`, `confirma`, `pode`, and a few others from the list count as approval. Any other word (e.g. `positivo`) cancels the pending action, and the user has to start over. Improvement: accept any approval word and any refusal word to cancel.
 
 - **`reading 'length'` at the source:** the definitive fix belongs in the `mcp-node-mssql` package, an npm package. We applied a local fix to the global install (with a backup), which is lost on `npm update -g`. Once the package is fixed, the mod's "executed" note can be removed.

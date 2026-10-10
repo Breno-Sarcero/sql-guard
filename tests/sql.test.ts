@@ -68,6 +68,25 @@ test('colchete com ]] escapado não esconde escrita', () => {
   expect(ops[0].action).toBe('DELETE')
 })
 
+test('variações de sp_help e sp_describe com argumentos continuam liberadas', () => {
+  expect(classify('exec sp_helptext CRM_BD.dbo.minha_proc')).toEqual([])
+  expect(classify("exec sp_describe_first_result_set N'select * from CRM_BD.dbo.clientes'")).toEqual([])
+  expect(classify("exec sp_help @objname = N'CRM_BD.dbo.clientes'")).toEqual([])
+})
+
+test('sp_help seguido de escrita na mesma linha não passa', () => {
+  expect(classify('exec sp_help CRM_BD.dbo.clientes DELETE FROM CRM_BD.dbo.logs').length).toBe(1)
+  expect(classify('exec sp_help x select * into CRM_BD.dbo.t from CRM_BD.dbo.y').length).toBe(1)
+})
+
+test('comandos de servidor que alteram estado contam como escrita', () => {
+  for (const q of ['shutdown', 'kill 52', "restore database CRM_BD from disk = 'x.bak'", "backup database CRM_BD to disk = 'x.bak'", 'dbcc checkdb', 'reconfigure'])
+    expect(classify(q).length).toBe(1)
+  const [restore] = classify("restore database CRM_BD from disk = 'x.bak'")
+  expect(restore.db).toBe('CRM_BD')
+  expect(restore.kind).toBe('database')
+})
+
 test('sp_help não serve de atalho para escrita na linha seguinte', () => {
   const ops = classify('exec sp_help CRM_BD.dbo.clientes\nDELETE FROM CRM_BD.dbo.logs')
   expect(ops.length).toBe(1)

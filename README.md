@@ -8,7 +8,7 @@ Protege contra escrita e DDL acidentais feitas pelo Claude Code: comandos nos MC
 
 ## O que é verificado
 
-- **MCP de SQL Server** (`query` nos servidores configurados): escrita e DDL são bloqueadas até confirmação. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`. Comandos sem `banco.schema.objeto` completo são negados, e `USE` também.
+- **MCP de SQL Server** (`query` nos servidores configurados): escrita e DDL são bloqueadas até confirmação. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`, `BACKUP`, `RESTORE`. Comandos sem `banco.schema.objeto` completo são negados, e `USE` também, assim como `SHUTDOWN`, `KILL`, `DBCC` e `RECONFIGURE`.
 - **Shell (Bash e PowerShell):** `sqlcmd`, `osql`, `bcp`, `Invoke-Sqlcmd`, drivers de banco no próprio comando (`pyodbc`, `pymssql`, `mssql`), `manage.py migrate/flush/loaddata/dbshell` e scripts (Python, Node, PowerShell) que usam driver de banco, inclusive módulos locais que eles importam. Mostra o que encontrou e a decisão é sua.
 - **Liberados sem aviso:** `SELECT`, `WITH` de leitura, `sys.*`, `INFORMATION_SCHEMA.*`, `sp_help*`, `sp_describe*`, e `manage.py runserver`.
 

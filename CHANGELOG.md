@@ -2,6 +2,11 @@
 
 # Changelog
 
+## 0.2.9
+
+- **Correção:** `sp_helptext`, `sp_describe_first_result_set` e outras variações de `sp_help*` e `sp_describe*` com argumentos voltaram a passar sem aviso, como diz o README. A correção da 0.2.4 tinha deixado só `sp_help <objeto>`. Os argumentos agora precisam ser uma lista de parâmetros (nome de objeto, string ou `@param = valor`); qualquer outra coisa conta como escrita. Assim, `exec sp_help x DELETE FROM y` e `exec sp_help x SELECT * INTO t FROM y` continuam bloqueados.
+- **Comandos de servidor:** `BACKUP`, `RESTORE`, `DBCC`, `SHUTDOWN`, `KILL` e `RECONFIGURE` passam a contar como escrita (antes passavam sem aviso). `BACKUP DATABASE` e `RESTORE DATABASE` seguem os dois avisos, com o banco identificado. Os demais não têm banco para mostrar e são negados.
+
 ## 0.2.8
 
 - README: exemplo de caminho no macOS e no Linux para a instalação pelo zip.
@@ -64,6 +69,7 @@
 
 ## Pendente
 
+- **Falsos positivos no shell:** o mod lê o script pelo caminho escrito no comando, a partir da pasta onde o Claude foi aberto. Se o comando fizer `cd` antes de rodar um script com caminho relativo, ou usar variável no caminho (`$PASTA/x.py`), o mod não acha o arquivo e pede confirmação por segurança. Contorno: usar o caminho completo, sem variável.
 - **Palavras de confirmação:** hoje só `sim`, `confirma`, `pode`, entre outras da lista, valem como aprovação. Qualquer outra palavra (ex.: `positivo`) cancela a pendência, e o usuário precisa começar de novo. Melhoria: aceitar qualquer palavra de aprovação e qualquer palavra de recusa para cancelar.
 
 - **Erro `reading 'length'` na origem:** a correção definitiva é no pacote `mcp-node-mssql`, que é um pacote npm. Aplicamos um ajuste local na instalação global (com backup), que se perde com `npm update -g`. Quando o pacote for tratado, a nota de "executado" do mod pode ser removida.

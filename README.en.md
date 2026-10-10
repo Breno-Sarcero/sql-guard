@@ -8,7 +8,7 @@ Protects against accidental writes and DDL made by Claude Code: commands on SQL 
 
 ## What it checks
 
-- **SQL Server MCP** (`query` on the configured servers): writes and DDL are blocked until confirmed. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`. Commands without a full `database.schema.object` name are denied, and so is `USE`.
+- **SQL Server MCP** (`query` on the configured servers): writes and DDL are blocked until confirmed. `INSERT`, `UPDATE`, `DELETE`, `MERGE`, `DROP`, `ALTER`, `TRUNCATE`, `CREATE`, `GRANT`, `REVOKE`, `DENY`, `SELECT ... INTO`, `EXEC`, `BACKUP`, `RESTORE`. Commands without a full `database.schema.object` name are denied, and so are `USE`, `SHUTDOWN`, `KILL`, `DBCC` and `RECONFIGURE`.
 - **Shell (Bash and PowerShell):** `sqlcmd`, `osql`, `bcp`, `Invoke-Sqlcmd`, database drivers in the command itself (`pyodbc`, `pymssql`, `mssql`), `manage.py migrate/flush/loaddata/dbshell`, and scripts (Python, Node, PowerShell) that use a database driver, including the local modules they import. It shows what it found, and the decision is yours.
 - **Allowed without a warning:** `SELECT`, read-only `WITH`, `sys.*`, `INFORMATION_SCHEMA.*`, `sp_help*`, `sp_describe*`, and `manage.py runserver`.
 

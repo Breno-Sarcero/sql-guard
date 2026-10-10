@@ -12,11 +12,14 @@ export type Op = {
   text: string
 }
 
-const WRITE = /\b(insert|update|delete|merge|drop|alter|truncate|create|grant|revoke|deny|exec|execute|bulk|openrowset|openquery|use|sp_executesql|xp_\w+)\b/i
+const WRITE = /\b(insert|update|delete|merge|drop|alter|truncate|create|grant|revoke|deny|exec|execute|bulk|openrowset|openquery|use|sp_executesql|xp_\w+|backup|restore|dbcc|shutdown|kill|reconfigure)\b/i
 const SELECT_INTO = /\bselect\b[\s\S]*?\binto\s+([\w\[\]\.]+)/i
-const TARGET = /\b(insert\s+into|update|delete\s+from|merge\s+into|truncate\s+table|(?:alter|create|drop)\s+(?:table|view|procedure|proc|function|trigger|index)|(?:alter|create|drop)\s+database|exec(?:ute)?)\s+(?:if\s+(?:not\s+)?exists\s+)?([\w\[\]\.]+)/i
-// sp_help e sp_describe só valem para um nome de objeto, sem mais nada na statement.
-const SP_HELP = /^(exec(ute)?\s+)?sp_(help|describe)\s+[\w.\[\]]+$/i
+const TARGET = /\b(insert\s+into|update|delete\s+from|merge\s+into|truncate\s+table|(?:alter|create|drop)\s+(?:table|view|procedure|proc|function|trigger|index)|(?:alter|create|drop|backup|restore)\s+database|exec(?:ute)?)\s+(?:if\s+(?:not\s+)?exists\s+)?([\w\[\]\.]+)/i
+// sp_help* e sp_describe* são leitura. Os argumentos só podem ser uma lista de parâmetros (nome de objeto, string
+// ou @param = valor, separados por vírgula): "exec sp_help x DELETE FROM y" é T-SQL válido sem ";" e não pode passar.
+const SP_ARG = String.raw`(?:@\w+\s*=\s*)?(?:N?'(?:[^']|'')*'|[\w.\[\]]+)`
+const SP_HELP = new RegExp(String.raw`^(?:exec(?:ute)?\s+)?sp_(?:help|describe)\w*(?:\s+${SP_ARG}(?:\s*,\s*${SP_ARG})*)?\s*$`, 'i')
+const isSpHelp = (text: string): boolean => SP_HELP.test(text)
 const DML = ['INSERT', 'UPDATE', 'DELETE', 'MERGE', 'SELECT INTO']
 const IN_TRANSACTION: Reversible = 'in-transaction'
 const NO: Reversible = 'no'
@@ -68,7 +71,7 @@ export function classify(query: string): Op[] {
     const text = stmt.trim()
     if (!text) continue
     // sp_help e sp_describe são leitura, liberadas pelo CLAUDE.md
-    if (SP_HELP.test(text)) continue
+    if (isSpHelp(text)) continue
 
     const word = WRITE.exec(text)
     const into = SELECT_INTO.exec(text)
@@ -104,7 +107,7 @@ export function classify(query: string): Op[] {
 
   // Camada fail-closed: se a limpeza escondeu alguma palavra de escrita do texto original, a statement vira escrita.
   const hidden = countWrites(query) > countWrites(clean)
-  if (hidden && !SP_HELP.test(query.trim())) {
+  if (hidden && !isSpHelp(query.trim())) {
     const word = WRITE.exec(query)
     if (word) ops.push({ action: word[1].toUpperCase(), db: null, table: null, kind: 'other', reversible: 'unknown', text: query })
   }
